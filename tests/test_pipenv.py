@@ -153,12 +153,15 @@ class TestPipenv:
                 c = p.pipenv('install requests')
                 assert c.return_code == 0
 
-                assert 'requests' in p.pipfile['packages']
-                assert 'requests' in p.lockfile['default']
-                assert 'chardet' in p.lockfile['default']
-                assert 'idna' in p.lockfile['default']
-                assert 'urllib3' in p.lockfile['default']
-                assert 'certifi' in p.lockfile['default']
+                _pipfile = p.pipfile
+                _lockfile = p.lockfile
+
+                assert 'requests' in _pipfile['packages']
+                assert 'requests' in _lockfile['default']
+                assert 'chardet' in _lockfile['default']
+                assert 'idna' in _lockfile['default']
+                assert 'urllib3' in _lockfile['default']
+                assert 'certifi' in _lockfile['default']
 
     @pytest.mark.spelling
     @pytest.mark.skip(reason="this is slightly non-deterministic")
@@ -178,12 +181,17 @@ class TestPipenv:
         with PipenvInstance() as p:
             c = p.pipenv('install requests')
             assert c.return_code == 0
-            assert 'requests' in p.pipfile['packages']
-            assert 'requests' in p.lockfile['default']
-            assert 'chardet' in p.lockfile['default']
-            assert 'idna' in p.lockfile['default']
-            assert 'urllib3' in p.lockfile['default']
-            assert 'certifi' in p.lockfile['default']
+
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' in _pipfile['packages']
+            assert 'requests' in _lockfile['default']
+            assert 'chardet' in _lockfile['default']
+            assert 'idna' in _lockfile['default']
+            assert 'urllib3' in _lockfile['default']
+            assert 'certifi' in _lockfile['default']
+
 
     @pytest.mark.dev
     @pytest.mark.run
@@ -192,12 +200,16 @@ class TestPipenv:
         with PipenvInstance() as p:
             c = p.pipenv('install requests --dev')
             assert c.return_code == 0
-            assert 'requests' in p.pipfile['dev-packages']
-            assert 'requests' in p.lockfile['develop']
-            assert 'chardet' in p.lockfile['develop']
-            assert 'idna' in p.lockfile['develop']
-            assert 'urllib3' in p.lockfile['develop']
-            assert 'certifi' in p.lockfile['develop']
+
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' in _pipfile['dev-packages']
+            assert 'requests' in _lockfile['develop']
+            assert 'chardet' in _lockfile['develop']
+            assert 'idna' in _lockfile['develop']
+            assert 'urllib3' in _lockfile['develop']
+            assert 'certifi' in _lockfile['develop']
 
             c = p.pipenv('run python -m requests.help')
             assert c.return_code == 0
@@ -208,21 +220,29 @@ class TestPipenv:
         with PipenvInstance() as p:
             c = p.pipenv('install requests')
             assert c.return_code == 0
-            assert 'requests' in p.pipfile['packages']
-            assert 'requests' in p.lockfile['default']
-            assert 'chardet' in p.lockfile['default']
-            assert 'idna' in p.lockfile['default']
-            assert 'urllib3' in p.lockfile['default']
-            assert 'certifi' in p.lockfile['default']
+
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' in _pipfile['packages']
+            assert 'requests' in _lockfile['default']
+            assert 'chardet' in _lockfile['default']
+            assert 'idna' in _lockfile['default']
+            assert 'urllib3' in _lockfile['default']
+            assert 'certifi' in _lockfile['default']
 
             c = p.pipenv('uninstall requests')
             assert c.return_code == 0
-            assert 'requests' not in p.pipfile['dev-packages']
-            assert 'requests' not in p.lockfile['develop']
-            assert 'chardet' not in p.lockfile['develop']
-            assert 'idna' not in p.lockfile['develop']
-            assert 'urllib3' not in p.lockfile['develop']
-            assert 'certifi' not in p.lockfile['develop']
+
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' not in _pipfile['dev-packages']
+            assert 'requests' not in _lockfile['develop']
+            assert 'chardet' not in _lockfile['develop']
+            assert 'idna' not in _lockfile['develop']
+            assert 'urllib3' not in _lockfile['develop']
+            assert 'certifi' not in _lockfile['develop']
 
             c = p.pipenv('run python -m requests.help')
             assert c.return_code > 0
@@ -233,14 +253,17 @@ class TestPipenv:
         with PipenvInstance() as p:
             c = p.pipenv('install requests[socks]')
             assert c.return_code == 0
-            assert 'requests' in p.pipfile['packages']
-            assert 'extras' in p.pipfile['packages']['requests']
 
-            assert 'requests' in p.lockfile['default']
-            assert 'chardet' in p.lockfile['default']
-            assert 'idna' in p.lockfile['default']
-            assert 'urllib3' in p.lockfile['default']
-            assert 'pysocks' in p.lockfile['default']
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' in _pipfile['packages']
+            assert 'extras' in _pipfile['packages']['requests']
+            assert 'requests' in _lockfile['default']
+            assert 'chardet' in _lockfile['default']
+            assert 'idna' in _lockfile['default']
+            assert 'urllib3' in _lockfile['default']
+            assert 'pysocks' in _lockfile['default']
 
     @pytest.mark.vcs
     @pytest.mark.install
@@ -248,9 +271,13 @@ class TestPipenv:
         with PipenvInstance() as p:
             c = p.pipenv('install git+https://github.com/requests/requests.git#egg=requests')
             assert c.return_code == 0
-            assert 'requests' in p.pipfile['packages']
-            assert 'git' in p.pipfile['packages']['requests']
-            assert p.lockfile['default']['requests'] == {"git": "https://github.com/requests/requests.git"}
+
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' in _pipfile['packages']
+            assert 'git' in _pipfile['packages']['requests']
+            assert _lockfile['default']['requests'] == {"git": "https://github.com/requests/requests.git"}
 
     @pytest.mark.e
     @pytest.mark.vcs
@@ -259,14 +286,18 @@ class TestPipenv:
         with PipenvInstance() as p:
             c = p.pipenv('install -e git+https://github.com/requests/requests.git#egg=requests')
             assert c.return_code == 0
-            assert 'requests' in p.pipfile['packages']
-            assert 'git' in p.pipfile['packages']['requests']
-            assert 'editable' in p.pipfile['packages']['requests']
-            assert 'editable' in p.lockfile['default']['requests']
-            assert 'chardet' in p.lockfile['default']
-            assert 'idna' in p.lockfile['default']
-            assert 'urllib3' in p.lockfile['default']
-            assert 'certifi' in p.lockfile['default']
+
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' in _pipfile['packages']
+            assert 'git' in _pipfile['packages']['requests']
+            assert 'editable' in _pipfile['packages']['requests']
+            assert 'editable' in _lockfile['default']['requests']
+            assert 'chardet' in _lockfile['default']
+            assert 'idna' in _lockfile['default']
+            assert 'urllib3' in _lockfile['default']
+            assert 'certifi' in _lockfile['default']
 
     @pytest.mark.run
     @pytest.mark.install
@@ -286,13 +317,16 @@ tpfd = "*"
             c = p.pipenv('install')
             assert c.return_code == 0
 
-            assert 'requests' in p.lockfile['default']
-            assert 'idna' in p.lockfile['default']
-            assert 'urllib3' in p.lockfile['default']
-            assert 'certifi' in p.lockfile['default']
-            assert 'records' in p.lockfile['default']
-            assert 'tpfd' in p.lockfile['default']
-            assert 'parse' in p.lockfile['default']
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' in _lockfile['default']
+            assert 'idna' in _lockfile['default']
+            assert 'urllib3' in _lockfile['default']
+            assert 'certifi' in _lockfile['default']
+            assert 'records' in _lockfile['default']
+            assert 'tpfd' in _lockfile['default']
+            assert 'parse' in _lockfile['default']
 
             c = p.pipenv('run python -c "import requests; import idna; import certifi; import records; import tpfd; import parse;"')
             assert c.return_code == 0
@@ -316,13 +350,16 @@ tpfd = "*"
             c = p.pipenv('install --sequential')
             assert c.return_code == 0
 
-            assert 'requests' in p.lockfile['default']
-            assert 'idna' in p.lockfile['default']
-            assert 'urllib3' in p.lockfile['default']
-            assert 'certifi' in p.lockfile['default']
-            assert 'records' in p.lockfile['default']
-            assert 'tpfd' in p.lockfile['default']
-            assert 'parse' in p.lockfile['default']
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' in _lockfile['default']
+            assert 'idna' in _lockfile['default']
+            assert 'urllib3' in _lockfile['default']
+            assert 'certifi' in _lockfile['default']
+            assert 'records' in _lockfile['default']
+            assert 'tpfd' in _lockfile['default']
+            assert 'parse' in _lockfile['default']
 
             c = p.pipenv('run python -c "import requests; import idna; import certifi; import records; import tpfd; import parse;"')
             assert c.return_code == 0
@@ -344,11 +381,14 @@ records = "*"
             c = p.pipenv('install')
             assert c.return_code == 0
 
-            assert 'requests' in p.lockfile['default']
-            assert 'idna' in p.lockfile['default']
-            assert 'urllib3' in p.lockfile['default']
-            assert 'certifi' in p.lockfile['default']
-            assert 'records' in p.lockfile['default']
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' in _lockfile['default']
+            assert 'idna' in _lockfile['default']
+            assert 'urllib3' in _lockfile['default']
+            assert 'certifi' in _lockfile['default']
+            assert 'records' in _lockfile['default']
 
             c = p.pipenv('run python -c "import requests; import idna; import certifi; import records;"')
             assert c.return_code == 0
@@ -356,11 +396,14 @@ records = "*"
             c = p.pipenv('update --sequential')
             assert c.return_code == 0
 
-            assert 'requests' in p.lockfile['default']
-            assert 'idna' in p.lockfile['default']
-            assert 'urllib3' in p.lockfile['default']
-            assert 'certifi' in p.lockfile['default']
-            assert 'records' in p.lockfile['default']
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
+            assert 'requests' in _lockfile['default']
+            assert 'idna' in _lockfile['default']
+            assert 'urllib3' in _lockfile['default']
+            assert 'certifi' in _lockfile['default']
+            assert 'records' in _lockfile['default']
 
             c = p.pipenv('run python -c "import requests; import idna; import certifi; import records;"')
             assert c.return_code == 0
@@ -425,11 +468,13 @@ requests = {version = "*"}
             c = p.pipenv('install')
             assert c.return_code == 0
 
-            assert 'requests' in p.lockfile['default']
-            assert 'idna' in p.lockfile['default']
-            assert 'urllib3' in p.lockfile['default']
-            assert 'certifi' in p.lockfile['default']
-            assert 'chardet' in p.lockfile['default']
+            _lockfile = p.lockfile
+
+            assert 'requests' in _lockfile['default']
+            assert 'idna' in _lockfile['default']
+            assert 'urllib3' in _lockfile['default']
+            assert 'certifi' in _lockfile['default']
+            assert 'chardet' in _lockfile['default']
 
             c = p.pipenv('run python -c "import requests; import idna; import certifi;"')
             assert c.return_code == 0
@@ -545,16 +590,19 @@ requests = {version = "*"}
             print(c.err)
             print(delegator.run('ls -l').out)
 
+            _pipfile = p.pipfile
+            _lockfile = p.lockfile
+
             # assert stuff in pipfile
-            assert 'requests' in p.pipfile['packages']
-            assert 'extras' in p.pipfile['packages']['requests']
+            assert 'requests' in _pipfile['packages']
+            assert 'extras' in _pipfile['packages']['requests']
 
             # assert stuff in lockfile
-            assert 'requests' in p.lockfile['default']
-            assert 'chardet' in p.lockfile['default']
-            assert 'idna' in p.lockfile['default']
-            assert 'urllib3' in p.lockfile['default']
-            assert 'pysocks' in p.lockfile['default']
+            assert 'requests' in _lockfile['default']
+            assert 'chardet' in _lockfile['default']
+            assert 'idna' in _lockfile['default']
+            assert 'urllib3' in _lockfile['default']
+            assert 'pysocks' in _lockfile['default']
 
     @pytest.mark.code
     @pytest.mark.virtualenv
@@ -603,20 +651,22 @@ requests = {git = "https://github.com/requests/requests", egg = "requests"}
 
             c = p.pipenv('install')
             assert c.return_code == 0
-            lock = p.lockfile
-            assert 'requests' in lock['develop']
-            assert 'click' in lock['default']
+
+            _lockfile = p.lockfile
+            assert 'requests' in _lockfile['develop']
+            assert 'click' in _lockfile['default']
 
             c = p.pipenv('run pip install -e git+https://github.com/dateutil/dateutil#egg=python_dateutil')
             assert c.return_code == 0
 
             c = p.pipenv('lock')
             assert c.return_code == 0
-            lock = p.lockfile
-            assert 'requests' in lock['develop']
-            assert 'click' in lock['default']
-            assert 'python_dateutil' not in lock['default']
-            assert 'python_dateutil' not in lock['develop']
+
+            _lockfile = p.lockfile
+            assert 'requests' in _lockfile['develop']
+            assert 'click' in _lockfile['default']
+            assert 'python_dateutil' not in _lockfile['default']
+            assert 'python_dateutil' not in _lockfile['develop']
 
     @pytest.mark.lock
     @pytest.mark.requirements
