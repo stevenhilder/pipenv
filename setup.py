@@ -27,7 +27,8 @@ required = [
     'pip>=9.0.1',
     'requests>2.18.0',
     'flake8>=3.0.0',
-    'urllib3>=1.21.1'
+    'urllib3>=1.21.1',
+    'appdirs>=1.4.3'
 ]
 
 if sys.version_info < (2, 7):

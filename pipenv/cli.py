@@ -25,6 +25,7 @@ import pipdeptree
 import requirements
 import semver
 import flake8.main.cli
+from appdirs import AppDirs
 from pipreqs import pipreqs
 from blindspin import spinner
 from urllib3.exceptions import InsecureRequestWarning
@@ -1620,8 +1621,30 @@ def cli(
         click.echo(crayons.normal(xyzzy, bold=True))
 
     if not update:
-        # Spun off in background thread, not unlike magic.
-        check_for_updates()
+        # Get config directory and then path for the last update file
+        dirs = AppDirs('pipenv')
+        config_file = os.path.join(dirs.user_config_dir, 'pipenv_last_update')
+
+        # Check and see if the config dir has been created
+        if os.path.isdir(dirs.user_config_dir):
+
+            # Checks to see if the 24 hours has elapsed since the last time
+            # the file was accessed
+            if os.path.getmtime(config_file) + 86400  < int(time.time()):
+
+                # If it was we can update the modification time and check for updates.
+                with open(config_file, 'a'):
+                    os.utime(config_file, None)
+
+                # Spun off in background thread, not unlike magic.
+                check_for_updates()
+
+        # If not create it abd write a file, set mtime to now
+        else:
+            os.makedirs(dirs.user_config_dir)
+            with open(config_file, 'w') as f:
+                os.utime(config_file, None)
+
     else:
         # Update pip to latest version.
         ensure_latest_pip()
