@@ -1667,7 +1667,7 @@ def cli(
     if ctx.invoked_subcommand is None:
         # --where was passed...
         if where:
-            do_where(bare=True)
+            do_where(bare=bare)
             sys.exit(0)
 
         elif py:
